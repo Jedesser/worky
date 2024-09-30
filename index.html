@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+</head>
+<body>
+    <h1>Welcome to Worky</h1>
+    <button id="send-data">Send Data to n8n</button>
+    
+    <!-- Элемент для отображения данных пользователя -->
+    <div id="user-data-display">Здесь появятся твои данные...</div>
+
+    <script>
+        // Дождаться загрузки страницы
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("send-data").addEventListener("click", function () {
+                // Получить initData из Telegram Web App
+                const initData = Telegram.WebApp.initData;
+
+                // Отправить данные в n8n Webhook
+                fetch('https://queue.artur.site/webhook/web-app-telegram-main-1', { // замените на ваш фактический URL вебхука
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ initData })
+                })
+                .then(response => response.json()) // Получить JSON ответ от n8n
+                .then(data => {
+                    // Обработка и отображение данных на странице Web App
+                    const displayElement = document.getElementById("user-data-display");
+                    displayElement.innerText = `Привет! Вот твои данные: ${JSON.stringify(data)}`;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
