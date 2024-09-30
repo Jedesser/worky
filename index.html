@@ -7,7 +7,6 @@
 </head>
 <body>
     <h1>Welcome to Worky</h1>
-    <button id="send-data">Send Data to n8n</button>
     
     <!-- Элемент для отображения данных пользователя -->
     <div id="user-data-display">Здесь появятся твои данные...</div>
@@ -15,12 +14,13 @@
     <script>
         // Дождаться загрузки страницы
         document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("send-data").addEventListener("click", function () {
+            // Проверить, что объект Telegram.WebApp доступен
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                 // Получить initData из Telegram Web App
                 const initData = Telegram.WebApp.initData;
 
-                // Отправить данные в n8n Webhook
-                fetch('https://queue.artur.site/webhook/web-app-telegram-main-1', { // замените на ваш фактический URL вебхука
+                // Отправить данные в n8n Webhook автоматически после загрузки
+                fetch('https://your-n8n-instance.com/webhook/telegram-initdata', { // замените на ваш фактический URL вебхука
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -36,7 +36,9 @@
                 .catch((error) => {
                     console.error('Error:', error);
                 });
-            });
+            } else {
+                console.error('Telegram WebApp не доступен');
+            }
         });
     </script>
 </body>
